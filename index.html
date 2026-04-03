@@ -16,11 +16,11 @@
     <div class="container nav-inner">
         <a href="#" class="logo-text" onclick="navigate('home')">UNISTAYZ</a>
         <ul class="nav-links" id="navLinks">
-            <li><a href="#" data-page="home" class="active">Archive</a></li>
-            <li><a href="#" data-page="properties">Collections</a></li>
-            <li><a href="#" data-page="blog">Journal</a></li>
-            <li><a href="#" data-page="roommates">Community</a></li>
-            <li><a href="#" data-page="calculator">Planning</a></li>
+            <li><a href="#" data-page="home" class="active">Home</a></li>
+            <li><a href="#" data-page="properties">Properties</a></li>
+            <li><a href="#" data-page="blog">Blog</a></li>
+            <li><a href="#" data-page="roommates">Roommates</a></li>
+            <li><a href="#" data-page="calculator">Calculator</a></li>
         </ul>
         <div class="nav-actions">
             <button class="icon-btn" onclick="toggleLang()" id="langToggle">EN</button>
@@ -85,8 +85,8 @@
     <div class="container">
         <div class="section-header">
             <div>
-                <span class="label">Selected Listings</span>
-                <h2>The Archive</h2>
+                <span class="label">Verified Listings</span>
+                <h2>Properties</h2>
                 <p>A rigorous selection of properties near Chandigarh University, Rayat Bahra, and CGC. Verified for peace of mind.</p>
             </div>
             <div class="view-toggle">
@@ -146,7 +146,7 @@
 <section class="section matte-alt">
     <div class="container">
         <div class="section-header">
-            <div><span class="label">The Journal</span><h2>Latest Essays</h2></div>
+            <div><span class="label">Blog</span><h2>Latest Posts</h2></div>
             <button class="btn-outline" onclick="navigate('blog')">Read All</button>
         </div>
         <div class="property-grid" id="blogGrid" style="border:none;"></div>
@@ -180,11 +180,11 @@
 
 <!-- ... other pages similarly styled ... -->
 <div id="page-blog" class="page" style="display:none; padding-top:160px;">
-    <div class="container"><div class="section-header"><div><span class="label">The Journal</span><h2>Essays & Guides</h2></div></div><div class="property-grid" id="allBlogGrid" style="border:none;"></div></div>
+    <div class="container"><div class="section-header"><div><span class="label">Blog</span><h2>Blog Posts</h2></div></div><div class="property-grid" id="allBlogGrid" style="border:none;"></div></div>
 </div>
 
 <div id="page-calculator" class="page" style="display:none; padding-top:160px;">
-    <div class="container"><div class="section-header"><div><span class="label">Planning</span><h2>Rent Calculator</h2></div></div>
+    <div class="container"><div class="section-header"><div><span class="label">Calculator</span><h2>Rent Calculator</h2></div></div>
         <div class="search-box" style="display:block; max-width:600px; margin:0 auto;">
             <div class="search-field" style="margin-bottom:20px;"><label>Monthly Lease (₹)</label><input type="number" id="calcRent" value="8000" oninput="calcBudget()"></div>
             <div class="search-field" style="margin-bottom:20px;"><label>Security Bond (₹)</label><input type="number" id="calcDeposit" value="16000" oninput="calcBudget()"></div>
@@ -212,9 +212,9 @@
                 <p style="margin-top:20px;">Curating the future of student living in the Punjab region. Handpicked, verified, and strictly professional.</p>
             </div>
             <div class="nav-links" style="flex-direction:column; gap:16px;">
-                <a href="#" onclick="navigate('home')">Archive</a>
-                <a href="#" onclick="navigate('properties')">Collections</a>
-                <a href="#" onclick="navigate('blog')">Journal</a>
+                <a href="#" onclick="navigate('home')">Home</a>
+                <a href="#" onclick="navigate('properties')">Properties</a>
+                <a href="#" onclick="navigate('blog')">Blog</a>
                 <a href="#" onclick="navigate('contact')">Contact</a>
             </div>
         </div>

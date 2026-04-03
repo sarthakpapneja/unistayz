@@ -411,7 +411,7 @@ function renderBlog() {
             <span class="label">${b.tag}</span>
             <div class="card-title" style="font-family:var(--font-heading); font-size:1.1rem;">${b.title}</div>
             <p style="font-size:0.8rem; margin:12px 0;">${b.meta}</p>
-            <button class="btn-outline" style="padding:10px 20px; font-size:0.7rem; margin-top:auto;">Read Essay</button>
+            <button class="btn-outline" style="padding:10px 20px; font-size:0.7rem; margin-top:auto;">Read Post</button>
         </div>
     `).join('');
 }
@@ -429,7 +429,7 @@ function renderRoommates() {
                 <span class="label" style="background:var(--accent-alt); color:black; padding:4px 12px; font-size:0.6rem;">Budget: ₹${r.budget}</span>
             </div>
             <p style="font-size:0.9rem; line-height:1.4; color:var(--text-muted);">"${r.note}"</p>
-            <button class="btn-primary" style="width:100%; margin-top:32px; padding:12px; font-size:0.7rem;" onclick="showToast('Initiating contact...','info')">Contact Peer</button>
+            <button class="btn-primary" style="width:100%; margin-top:32px; padding:12px; font-size:0.7rem;" onclick="showToast('Initiating contact...','info')">Contact Roommate</button>
         </div>
     `).join('');
 }
