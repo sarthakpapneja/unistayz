@@ -539,6 +539,15 @@ document.querySelectorAll('.modal-overlay').forEach(m => { m.addEventListener('c
 function toggleMenu() { document.getElementById('navLinks').classList.toggle('open'); document.getElementById('navActions').classList.toggle('open'); }
 window.addEventListener('scroll', () => { document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60); });
 
+// SPA Navigation Bindings
+document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const page = link.dataset.page;
+        if(page) navigate(page);
+    });
+});
+
 // Animations
 function animateCounters() {
     document.querySelectorAll('.stat-num:not(.animated)').forEach(el => {
