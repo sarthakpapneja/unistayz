@@ -102,8 +102,6 @@ function updateAuthUI() {
         document.getElementById('navAuth').style.display = 'none';
         document.getElementById('navUser').style.display = 'block';
         document.getElementById('userAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
-        document.getElementById('userName').textContent = currentUser.name;
-        document.getElementById('userEmail').textContent = currentUser.email;
     } else {
         document.getElementById('navAuth').style.display = 'block';
         document.getElementById('navUser').style.display = 'none';
@@ -131,44 +129,21 @@ function toggleUserMenu() { document.getElementById('userDropdown').classList.to
 /* ═══════════ RENDERING CARDS ═══════════ */
 function generateCardHTML(p) {
     const isFav = favorites.includes(p.id) ? 'saved' : '';
-    const isComp = compareList.includes(p.id) ? 'compared' : '';
     const favIcon = isFav ? '♥' : '♡';
-    const compIcon = isComp ? '✓' : '⊞';
-    
-    // Carousel setup
-    const imgs = p.images.map((img,i) => `<img src="${img}" class="${i===0?'active':''}">`).join('');
-    const dots = p.images.map((img,i) => `<button class="carousel-dot ${i===0?'active':''}" onclick="event.stopPropagation();switchImage(this,${i})"></button>`).join('');
     
     return `
         <div class="property-card" onclick="viewProperty(${p.id})">
-            <div class="carousel">
-                <div class="carousel-images">${imgs}</div>
-                <button class="carousel-nav prev" onclick="event.stopPropagation();navImage(this,-1)">‹</button>
-                <button class="carousel-nav next" onclick="event.stopPropagation();navImage(this,1)">›</button>
-                <div class="carousel-dots">${dots}</div>
-                <div class="card-badges">
-                    <span class="badge badge-rent">For Rent</span>
-                    <span class="badge badge-type">${p.tag}</span>
-                </div>
-                <div class="card-actions">
-                    <button class="card-action-btn ${isComp}" onclick="event.stopPropagation();toggleCompare(${p.id})" title="Compare">${compIcon}</button>
-                    <button class="card-action-btn ${isFav}" onclick="event.stopPropagation();toggleFav(${p.id})" title="Save">${favIcon}</button>
-                </div>
+            <div class="card-image"><img src="${p.images[0]}" alt="${p.title}"></div>
+            <span class="label" style="margin-bottom:8px;">${p.tag}</span>
+            <div class="card-title" style="font-family:var(--font-heading); font-size:1.2rem; margin-bottom:8px;">${p.title}</div>
+            <div class="card-location">📍 ${p.location}</div>
+            <div class="card-price">₹${p.price.toLocaleString('en-IN')}<small style="font-weight:400; font-size:0.8rem; color:var(--text-muted);"> / month</small></div>
+            <div class="card-amenities">
+                <span>${p.beds} Beds</span> • <span>${p.baths} Baths</span> • <span>${p.sqft} sqft</span>
             </div>
-            <div class="card-body">
-                <div class="card-price">₹${p.price.toLocaleString('en-IN')}<small>/month</small></div>
-                <div class="card-title">${p.title}</div>
-                <div class="card-location">📍 ${p.exact}</div>
-                <div class="card-rating">★ ${p.rating} / 5</div>
-                <div class="card-amenities">
-                    <div class="amenity">🛏 <span>${p.beds}</span> Bed</div>
-                    <div class="amenity">🚿 <span>${p.baths}</span> Bath</div>
-                    <div class="amenity">📐 <span>${p.sqft}</span> sq</br>ft</div>
-                </div>
-            </div>
-            <div class="card-footer">
-                <button class="btn-outline" onclick="event.stopPropagation();viewProperty(${p.id})">Details</button>
-                <a href="https://wa.me/919876543210?text=Hi,%20I%20am%20interested%20in%20${p.title}" target="_blank" class="btn-primary whatsapp-btn" onclick="event.stopPropagation()">WhatsApp</a>
+            <div style="margin-top:24px; display:flex; gap:12px;">
+                <button class="btn-primary" style="flex:1; padding:12px; font-size:0.7rem;" onclick="event.stopPropagation();viewProperty(${p.id})">View Details</button>
+                <button class="btn-outline" style="padding:12px; border-color:var(--border);" onclick="event.stopPropagation();toggleFav(${p.id})">${favIcon}</button>
             </div>
         </div>
     `;
@@ -272,58 +247,53 @@ function viewProperty(id) {
     navigate('detail');
     
     const html = `
-        <div class="detail-header">
+        <div class="detail-header" style="display:grid; grid-template-columns: 1.5fr 1fr; border-bottom:1px solid var(--border); padding-bottom:80px; gap:60px;">
             <div class="detail-photos">
-                <div class="detail-gallery"><img src="${p.images[0]}" id="mainPropImg"></div>
-                <div class="detail-thumbs">
-                    ${p.images.map(img => `<img src="${img}" onclick="document.getElementById('mainPropImg').src=this.src;document.querySelectorAll('.detail-thumbs img').forEach(i=>i.classList.remove('active'));this.classList.add('active')">`).join('')}
+                <div class="detail-gallery" style="border:1px solid var(--border); overflow:hidden;"><img src="${p.images[0]}" id="mainPropImg" style="filter:grayscale(0.2); height:600px; width:100%; object-fit:cover;"></div>
+                <div class="detail-thumbs" style="display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-top:12px;">
+                    ${p.images.map(img => `<img src="${img}" style="width:100%; height:80px; border:1px solid var(--border); opacity:0.6; cursor:pointer; object-fit:cover;" onclick="document.getElementById('mainPropImg').src=this.src;document.querySelectorAll('.detail-thumbs img').forEach(i=>i.style.opacity=0.6);this.style.opacity=1">`).join('')}
                 </div>
             </div>
             <div class="detail-info">
-                <div style="display:flex;justify-content:space-between;align-items:flex-start">
-                    <div><span class="badge badge-rent">For Rent</span> <span class="badge badge-type">${p.tag}</span></div>
-                    <button class="icon-btn ${favorites.includes(p.id)?'accent':''}" onclick="toggleFav(${p.id})">${favorites.includes(p.id)?'♥':'♡'}</button>
+                <span class="label">Property Detail</span>
+                <h1 style="font-size:clamp(2.5rem, 5vw, 4.5rem); margin-bottom:20px;">${p.title}</h1>
+                <div class="card-location" style="font-size:1rem; margin-bottom:32px;">📍 ${p.exact}</div>
+                <div class="detail-price" style="font-family:var(--font-heading); font-size:2.5rem; margin-bottom:40px;">₹${p.price.toLocaleString('en-IN')}<small style="font-size:1rem; font-weight:400; color:var(--text-muted);"> / month</small></div>
+                
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:32px; margin-bottom:40px; border-top:1px solid var(--border); padding-top:40px;">
+                    <div><span class="label">Space</span><strong>${p.sqft} SQFT</strong></div>
+                    <div><span class="label">Layout</span><strong>${p.beds} BED / ${p.baths} BATH</strong></div>
+                    <div><span class="label">Verification</span><strong>VERIFIED</strong></div>
+                    <div><span class="label">Rating</span><strong>★ ${p.rating}</strong></div>
                 </div>
-                <h2>${p.title}</h2>
-                <div class="card-location" style="font-size:1rem">📍 ${p.exact}</div>
-                <div class="detail-price">₹${p.price.toLocaleString('en-IN')}<small>/month</small></div>
-                <div class="detail-meta">
-                    <div class="detail-meta-item"><strong>${p.beds}</strong><span>Beds</span></div>
-                    <div class="detail-meta-item"><strong>${p.baths}</strong><span>Baths</span></div>
-                    <div class="detail-meta-item"><strong>${p.sqft}</strong><span>Sqft</span></div>
-                    <div class="detail-meta-item" style="color:var(--accent-warm)"><strong>★ ${p.rating}</strong><span>Rating</span></div>
-                </div>
-                <p style="color:var(--text-muted);font-size:1rem;line-height:1.7">${p.desc}</p>
-                <h4>Amenities</h4>
-                <div class="detail-amenities">
-                    ${p.amenities.map(a => `<span class="amenity-tag">${a}</span>`).join('')}
-                </div>
-                <div class="detail-actions">
-                    <button class="btn-primary" style="flex:1" onclick="openModal('reviewModal');document.getElementById('reviewPropId').value=${p.id}">Write Review</button>
-                    <a href="https://wa.me/919876543210?text=Hi,%20I%20am%20interested%20in%20${p.title}" target="_blank" class="btn-primary whatsapp-btn" style="flex:1">Chat on WhatsApp</a>
+
+                <p style="margin-bottom:40px; font-size:1.1rem; line-height:1.6;">${p.desc} This space has been selected for its unique combination of location and functionality. Perfect for long-term study stays.</p>
+
+                <div class="detail-actions" style="display:flex; gap:20px;">
+                    <button class="btn-primary" style="flex:1" onclick="openModal('reviewModal');document.getElementById('reviewPropId').value=${p.id}">Submit Review</button>
+                    <a href="https://wa.me/919876543210?text=Hi,%20I%20am%20interested%20in%20${p.title}" target="_blank" class="btn-outline" style="flex:1; text-align:center; padding:18px;">Enquire Now</a>
                 </div>
             </div>
         </div>
-        <div class="detail-map" id="singleMap"></div>
+        <div class="detail-map" id="singleMap" style="height:400px; margin:80px 0; border:1px solid var(--border);"></div>
         <div class="detail-reviews">
-            <h3>Recent Reviews</h3>
-            <div id="reviewsBox" style="margin-top:20px">
-                <div class="review-card">
-                    <div class="review-header"><strong>Arjun S.</strong><span class="stars" style="margin:0;font-size:1rem">★★★★★</span></div>
-                    <p>Awesome property, exactly as shown in photos!</p>
+            <span class="label">Resident Feed</span>
+            <h2 style="margin-bottom:40px;">Recent Reviews</h2>
+            <div id="reviewsBox" style="display:grid; grid-template-columns:1fr 1fr; gap:24px;">
+                <div class="review-card" style="border:1px solid var(--border); padding:32px;">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:16px;"><strong>ARJUN S.</strong><span style="color:var(--accent-alt)">★★★★★</span></div>
+                    <p style="font-size:0.9rem;">"A remarkably quiet and well-maintained space. Exactly what the archive promised."</p>
                 </div>
             </div>
         </div>
     `;
     document.getElementById('detailContent').innerHTML = html;
-    document.querySelector('.detail-thumbs img').classList.add('active');
     
-    // Init single map
     setTimeout(() => {
         if(window.singleMapObj) { window.singleMapObj.remove(); }
         window.singleMapObj = L.map('singleMap').setView([p.lat, p.lng], 15);
         L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { maxZoom: 19 }).addTo(window.singleMapObj);
-        L.marker([p.lat, p.lng]).addTo(window.singleMapObj).bindPopup(`<b>${p.title}</b><br>${p.exact}`).openPopup();
+        L.marker([p.lat, p.lng]).addTo(window.singleMapObj);
     }, 100);
 }
 
@@ -436,32 +406,30 @@ function calcBudget() {
 /* ═══════════ BLOG & ROOMMATES ═══════════ */
 function renderBlog() {
     document.getElementById('blogGrid').innerHTML = blogPosts.map(b => `
-        <div class="blog-card">
-            <img src="${b.img}">
-            <div class="blog-card-body">
-                <span class="blog-tag">${b.tag}</span>
-                <h3>${b.title}</h3>
-                <p>Read about the best practices and latest updates.</p>
-                <div class="blog-meta">${b.meta}</div>
-            </div>
+        <div class="property-card">
+            <div class="card-image"><img src="${b.img}" style="height:200px;"></div>
+            <span class="label">${b.tag}</span>
+            <div class="card-title" style="font-family:var(--font-heading); font-size:1.1rem;">${b.title}</div>
+            <p style="font-size:0.8rem; margin:12px 0;">${b.meta}</p>
+            <button class="btn-outline" style="padding:10px 20px; font-size:0.7rem; margin-top:auto;">Read Essay</button>
         </div>
     `).join('');
 }
 
 function renderRoommates() {
     document.getElementById('roommateGrid').innerHTML = roommates.map(r => `
-        <div class="roommate-card">
-            <div class="rm-header">
-                <div class="avatar" style="background:var(--gradient)">${r.avatar}</div>
-                <div><strong>${r.name}</strong><br><span style="font-size:0.8rem;color:var(--text-muted)">Looking in ${r.area}</span></div>
+        <div class="property-card" style="padding:32px;">
+            <div style="display:flex; align-items:center; gap:20px; margin-bottom:24px;">
+                <div style="width:60px; height:60px; background:var(--accent-alt); color:black; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1.5rem;">${r.avatar}</div>
+                <div><strong>${r.name}</strong><br><span style="font-size:0.7rem; text-transform:uppercase; color:var(--text-dim); letter-spacing:0.05em;">${r.area}</span></div>
             </div>
-            <div class="rm-details">
-                <span class="rm-tag">${r.gender}</span>
-                <span class="rm-tag">${r.col}</span>
-                <span class="rm-tag" style="background:rgba(6,182,212,0.1);color:var(--accent)">Budget: ₹${r.budget}</span>
+            <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:24px;">
+                <span class="label" style="background:var(--card-alt); padding:4px 12px; font-size:0.6rem;">${r.gender}</span>
+                <span class="label" style="background:var(--card-alt); padding:4px 12px; font-size:0.6rem;">${r.col}</span>
+                <span class="label" style="background:var(--accent-alt); color:black; padding:4px 12px; font-size:0.6rem;">Budget: ₹${r.budget}</span>
             </div>
-            <p class="rm-note">"${r.note}"</p>
-            <button class="btn-outline" style="width:100%;margin-top:16px" onclick="showToast('Contact request sent!','success')">Contact ${r.name.split(' ')[0]}</button>
+            <p style="font-size:0.9rem; line-height:1.4; color:var(--text-muted);">"${r.note}"</p>
+            <button class="btn-primary" style="width:100%; margin-top:32px; padding:12px; font-size:0.7rem;" onclick="showToast('Initiating contact...','info')">Contact Peer</button>
         </div>
     `).join('');
 }
@@ -502,7 +470,8 @@ function submitReview() {
 function showToast(msg, type='info') {
     const t = document.createElement('div');
     t.className = `toast ${type}`;
-    t.innerHTML = `${type==='success'?'✓':type==='warning'?'!':'i'} ${msg}`;
+    t.style.cssText = "background:var(--card); border:1px solid var(--border-bright); padding:16px 32px; color:white; margin-bottom:10px; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.1em; animation:toastIn 0.3s ease;";
+    t.innerHTML = msg;
     document.getElementById('toastContainer').appendChild(t);
     setTimeout(() => t.remove(), 4000);
 }
